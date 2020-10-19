@@ -11,6 +11,7 @@ const data1 = {
     ],
     price: 500,
     quantity: 2,
+    detailed_description: "This is Item A",
     vendor_name: "Vendor A"
 }
 const data2 = {
@@ -20,6 +21,7 @@ const data2 = {
     ],
     price: 850,
     quantity: 1,
+    detailed_description: "This is Item B",
     vendor_name: "Vendor B"
 }
 const data3 = {
@@ -29,6 +31,7 @@ const data3 = {
     ],
     price: 50,
     quantity: 5,
+    detailed_description: "This is Item C",
     vendor_name: "Vendor C"
 }
 
@@ -36,7 +39,7 @@ describe("POST Tests", function() {
     it("should POST 1 item successfully", function(done) {
         request(app)
             .post("/items/create")
-            .send(data1)
+            .send({ data: data1 })
             .set('Accept', 'application/json')
             .expect('Content-Type', /json/)
             .expect(200)
@@ -48,7 +51,7 @@ describe("POST Tests", function() {
     it("should POST 2 items successfully", function(done) {
         request(app)
             .post("/items/create")
-            .send([data2, data3])
+            .send({ data: [data2, data3] })
             .set('Accept', 'application/json')
             .expect('Content-Type', /json/)
             .expect(200)

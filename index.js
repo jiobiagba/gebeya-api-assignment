@@ -1,6 +1,7 @@
 
 const express = require("express")
 const mongoose = require("mongoose")
+const MainRouter = require("./main.routes").RoutesConnector
 
 const port = process.env.PORT || 5000
 
@@ -26,6 +27,8 @@ const app = express()
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
+
+app.use("/", MainRouter)
 
 app.use("*", (req, res) => {
     res.status(404).send({
