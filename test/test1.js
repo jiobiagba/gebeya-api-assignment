@@ -11,7 +11,6 @@ const data1 = {
         "pixA.jpg"
     ],
     price: 500,
-    quantity: 2,
     detailed_description: "This is Item A",
     vendor_name: "Vendor A"
 }
@@ -21,7 +20,6 @@ const data2 = {
         "pixB.jpg"
     ],
     price: 850,
-    quantity: 1,
     detailed_description: "This is Item B",
     vendor_name: "Vendor B"
 }
@@ -31,7 +29,6 @@ const data3 = {
         "pixC.jpg"
     ],
     price: 50,
-    quantity: 5,
     detailed_description: "This is Item C",
     vendor_name: "Vendor C"
 }
@@ -41,11 +38,12 @@ const data4 = {
         "pixA.jpg"
     ],
     price: 1500,
-    quantity: 2,
     detailed_description: "This is Item A",
     vendor_name: "Vendor A"
 }
-let id;
+var id
+var id2
+var id3
 
 
 // Tests
@@ -56,7 +54,7 @@ describe("POST Tests", function() {
             .send({ data: data1 })
             .set('Accept', 'application/json')
             .expect('Content-Type', /json/)
-            .expect(200)
+            .expect(201)
             .end((err, res) => {
                 expect(res.body.result.price).toBe(data1.price)
                 id = res.body.result._id
@@ -69,10 +67,12 @@ describe("POST Tests", function() {
             .send({ data: [data2, data3] })
             .set('Accept', 'application/json')
             .expect('Content-Type', /json/)
-            .expect(200)
+            .expect(201)
             .end((err, res) => {
                 expect(res.body.result[0].price).toBe(data2.price)
                 expect(res.body.result[1].price).toBe(data3.price)
+                id2 = res.body.result[0]._id
+                id3 = res.body.result[1]._id
                 done()
             })
     })
@@ -124,4 +124,85 @@ describe("UPDATE and DELETE Tests", function() {
     })
 })
 
-setTimeout(() => process.exit(0), 5000)
+
+
+
+// CART Endpoints Tests
+
+var idCart
+
+// Tests
+describe("Add-To-Cart Tests", function() {
+    it("should create new cart if cartId query parameter isn't supplied", function(done) {
+        request(app)
+            .post("/carts/add-to-cart")
+            .send({ data: {
+                items: [{ item_id: id2, quantity: 4 }] // Creating new cart
+            } })
+            .set('Accept', 'application/json')
+            .expect('Content-Type', /json/)
+            .expect(201)
+            .end((err, res) => {
+                expect(res.body.result.items[0].item_id).toBe(id2)
+                idCart = res.body.result._id
+                done()
+            })
+    })
+    it("should update existing cart if cartId query parameter is supplied", function(done) {
+        request(app)
+            .post("/carts/add-to-cart")
+            .query({ cartId: idCart })
+            .send({ data: {
+                items: [{ item_id: id2, quantity: 5 }, { item_id: id3, quantity: 10 }] // Adding item to existing cart
+            } })
+            .set('Accept', 'application/json')
+            .expect('Content-Type', /json/)
+            .expect(201)
+            .end((err, res) => {
+                expect(res.body.result._id).toBe(idCart)
+                expect(res.body.result.items[0].item_id).toBe(id2)
+                expect(res.body.result.items[1].item_id).toBe(id3)
+                done()
+            })
+    })
+})
+
+describe("Cart Details Test", function() {
+    it("should show detals of items in cart", function(done) {
+        request(app)
+        .get("/carts/cart-details/" + idCart)
+        .expect(200)
+        .end((err, res) => {
+            expect(res.body.result._id).toBe(idCart)
+            const itemsArray = res.body.result.items
+            for( let item of itemsArray) {
+                expect(item).toHaveProperty("item_id._id")
+                expect(item).toHaveProperty("item_id.name")
+                expect(item).toHaveProperty("item_id.price")
+                expect(item).toHaveProperty("item_id.detailed_description")
+            }
+            done()
+        })
+    })
+})
+
+describe("Remove-From-Cart Test", function() {
+    it("should remove one item from the items in cart", function(done) {
+        request(app)
+            .post("/carts/add-to-cart")
+            .query({ cartId: idCart })
+            .send({ data: {
+                items: [{ item_id: id3, quantity: 10 }] // Removing items.id2 from existing cart
+            } })
+            .set('Accept', 'application/json')
+            .expect('Content-Type', /json/)
+            .expect(201)
+            .end((err, res) => {
+                expect(res.body.result._id).toBe(idCart)
+                expect(res.body.result.items[0].item_id).toBe(id3)
+                done()
+            })
+    })
+})
+
+setTimeout(() => process.exit(0), 10000)
