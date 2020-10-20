@@ -7,7 +7,6 @@ const ItemSchema = new mongoose.Schema({
         String
     ],
     price: Number,
-    quantity: Number,
     detailed_description: String
 },
 {
