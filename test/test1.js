@@ -45,7 +45,7 @@ const data4 = {
     detailed_description: "This is Item A",
     vendor_name: "Vendor A"
 }
-let id;
+let id, id2, id3
 
 
 // Tests
@@ -56,7 +56,7 @@ describe("POST Tests", function() {
             .send({ data: data1 })
             .set('Accept', 'application/json')
             .expect('Content-Type', /json/)
-            .expect(200)
+            .expect(201)
             .end((err, res) => {
                 expect(res.body.result.price).toBe(data1.price)
                 id = res.body.result._id
@@ -69,10 +69,12 @@ describe("POST Tests", function() {
             .send({ data: [data2, data3] })
             .set('Accept', 'application/json')
             .expect('Content-Type', /json/)
-            .expect(200)
+            .expect(201)
             .end((err, res) => {
                 expect(res.body.result[0].price).toBe(data2.price)
                 expect(res.body.result[1].price).toBe(data3.price)
+                id2 = res.body.result[0]._id
+                id3 = res.body.result[1]._id
                 done()
             })
     })
@@ -123,5 +125,8 @@ describe("UPDATE and DELETE Tests", function() {
             })
     })
 })
+
+exports.id2 = id2
+exports.id3 = id3
 
 setTimeout(() => process.exit(0), 5000)
