@@ -53,3 +53,4 @@ const logIn = async(req, res) => {
 }
 
 exports.register = register
+exports.logIn = logIn
