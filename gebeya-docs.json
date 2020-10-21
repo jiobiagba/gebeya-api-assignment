@@ -1,0 +1,581 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+      "title": "Gebeya",
+      "version": "1.0",
+      "description": "Gebeya Assignment's API Docs",
+      "contact": {
+        "name": "jiobiagba"
+      }
+    },
+    "servers": [
+      {
+        "url": "http://localhost:5000"
+      }
+    ],
+    "paths": {
+      "/users/register": {
+        "parameters": [],
+        "post": {
+          "summary": "",
+          "operationId": "post-users-register",
+          "responses": {
+            "200": {
+              "description": "OK"
+            }
+          },
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "",
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "required": [
+                        "username",
+                        "password"
+                      ],
+                      "properties": {
+                        "username": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "password": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "name": {
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                },
+                "examples": {
+                  "example-1": {
+                    "value": {
+                      "data": {
+                        "username": "user1",
+                        "password": "user1",
+                        "name": "user1"
+                      }
+                    }
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            },
+            "description": "This should contain at least a username and a password"
+          },
+          "description": "Registers a new user",
+          "tags": [
+            "add-user"
+          ]
+        }
+      },
+      "/users/login": {
+        "post": {
+          "summary": "",
+          "operationId": "post-users-login",
+          "responses": {
+            "200": {
+              "description": "OK"
+            }
+          },
+          "description": "Log a user in. Returns a token as part of result",
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "",
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "username": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "password": {
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      },
+                      "required": [
+                        "username",
+                        "password"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                },
+                "examples": {
+                  "example-1": {
+                    "value": {
+                      "data": {
+                        "username": "user2",
+                        "password": "user2"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "username and password ARE BOTH compulsory."
+          },
+          "tags": [
+            "login"
+          ]
+        },
+        "parameters": []
+      },
+      "/items/create": {
+        "parameters": [],
+        "post": {
+          "summary": "",
+          "operationId": "post-items-create",
+          "responses": {
+            "200": {
+              "description": "OK",
+              "headers": {}
+            }
+          },
+          "tags": [
+            "save-items"
+          ],
+          "description": "Adds one or more items to the items collection",
+          "parameters": [
+            {
+              "schema": {
+                "type": "string"
+              },
+              "in": "header",
+              "description": "token of permitted user is to be added here",
+              "deprecated": true,
+              "name": "Authorization",
+              "required": true
+            },
+            {
+              "schema": {
+                "type": "string"
+              },
+              "in": "header",
+              "name": "Content-Type",
+              "description": "application/json\n",
+              "required": true
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "",
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "required": [
+                        "name",
+                        "price"
+                      ],
+                      "properties": {
+                        "name": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "photo": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "price": {
+                          "type": "number"
+                        },
+                        "detailed_description": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "vendor_name": {
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            },
+            "description": "Items can be added singly or as an array of 2 or more items to data."
+          }
+        }
+      },
+      "/items/get-available": {
+        "get": {
+          "summary": "Your GET endpoint",
+          "tags": [],
+          "responses": {
+            "200": {
+              "description": "OK"
+            }
+          },
+          "operationId": "get-items-get-available",
+          "description": "GETs all available items sorted by price in descending order",
+          "parameters": [
+            {
+              "schema": {
+                "type": "number"
+              },
+              "in": "query",
+              "name": "limit",
+              "description": "This is the number of items to return. Defaults to 100"
+            },
+            {
+              "schema": {
+                "type": "number"
+              },
+              "in": "query",
+              "name": "page",
+              "description": "Multiplied by limit, it determines the number of items to skip before returning within the limit range. Defaults to 0"
+            },
+            {
+              "schema": {
+                "type": "string"
+              },
+              "in": "header",
+              "name": "Authorization",
+              "required": true,
+              "description": "Add token here"
+            }
+          ]
+        }
+      },
+      "/items/get-one-by-id/{id}": {
+        "get": {
+          "summary": "Your GET endpoint",
+          "tags": [],
+          "responses": {
+            "200": {
+              "description": "OK"
+            }
+          },
+          "operationId": "get-items-get-one-by-id",
+          "description": "Retrieves 1 item using its id in the database",
+          "parameters": [
+            {
+              "schema": {
+                "type": "string"
+              },
+              "in": "header",
+              "name": "Authorization",
+              "description": "Add token here",
+              "required": true
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "id of the item"
+          }
+        ]
+      },
+      "/items/update-one-by-id/{id}": {
+        "put": {
+          "summary": "",
+          "operationId": "put-items-update-one-by-id",
+          "responses": {
+            "200": {
+              "description": "OK"
+            }
+          },
+          "tags": [
+            "update-item"
+          ],
+          "description": "Updates one item in the items collection",
+          "parameters": [
+            {
+              "schema": {
+                "type": "string"
+              },
+              "in": "header",
+              "name": "Authorization",
+              "required": true,
+              "description": "Add tken here"
+            },
+            {
+              "schema": {
+                "type": "string"
+              },
+              "in": "header",
+              "name": "Content-Type",
+              "description": "application/json"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "",
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "required": [
+                        "detailed_description",
+                        "vendor_name"
+                      ],
+                      "properties": {
+                        "photo": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "name": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "price": {
+                          "type": "number"
+                        },
+                        "detailed_description": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "vendor_name": {
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "id of item to update"
+          }
+        ]
+      },
+      "/items/delete-one-by-id/{id}": {
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "id of item to be deleted"
+          }
+        ],
+        "delete": {
+          "summary": "",
+          "operationId": "delete-items-delete-one-by-id",
+          "responses": {
+            "200": {
+              "description": "OK"
+            }
+          },
+          "tags": [
+            "delete-item"
+          ],
+          "description": "Deletes an item from the items collection",
+          "parameters": [
+            {
+              "schema": {
+                "type": "string"
+              },
+              "in": "header",
+              "name": "Authorization",
+              "description": "Add token here",
+              "required": true
+            }
+          ]
+        }
+      },
+      "/carts/add-to-cart": {
+        "post": {
+          "summary": "",
+          "operationId": "post-carts-add-to-cart",
+          "responses": {
+            "200": {
+              "description": "OK"
+            }
+          },
+          "tags": [
+            "add-to-cart"
+          ],
+          "description": "Use this endpoint to create a new cart, add to existing cart and remove from existing cart",
+          "parameters": [
+            {
+              "schema": {
+                "type": "string"
+              },
+              "in": "query",
+              "name": "cartId",
+              "description": "the id of the cart to add items to, or remove items from, if the cart already exists. Do not supply this with the POST data if you want to create a new cart."
+            },
+            {
+              "schema": {
+                "type": "string"
+              },
+              "in": "header",
+              "name": "Authorization",
+              "required": true,
+              "description": "Add token here"
+            },
+            {
+              "schema": {
+                "type": "string"
+              },
+              "in": "header",
+              "name": "Content-Type",
+              "description": "application/json",
+              "required": true
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "",
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "items": {
+                          "type": "array",
+                          "uniqueItems": true,
+                          "minItems": 1,
+                          "items": {
+                            "required": [
+                              "item_id",
+                              "quantity"
+                            ],
+                            "properties": {
+                              "item_id": {
+                                "type": "string",
+                                "minLength": 1
+                              },
+                              "quantity": {
+                                "type": "number"
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "required": [
+                        "items"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            },
+            "description": "All items and their quantities are to be added to the items array as separate objects"
+          }
+        }
+      },
+      "/carts/cart-details/{id}": {
+        "get": {
+          "summary": "Your GET endpoint",
+          "tags": [
+            "cart-details"
+          ],
+          "responses": {
+            "200": {
+              "description": "OK"
+            }
+          },
+          "operationId": "get-carts-cart-details",
+          "description": "Retrieves ALL items in a cart and populates the details of each item",
+          "parameters": [
+            {
+              "schema": {
+                "type": "string"
+              },
+              "in": "header",
+              "name": "Authorization",
+              "required": true,
+              "description": "Add Token Here"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "This is the id of the cart whose details is needed"
+          }
+        ]
+      }
+    },
+    "components": {
+      "schemas": {},
+      "securitySchemes": {}
+    },
+    "tags": [
+      {
+        "name": "add-user"
+      },
+      {
+        "name": "login"
+      },
+      {
+        "name": "save-items"
+      },
+      {
+        "name": "update-item"
+      },
+      {
+        "name": "delete-item"
+      },
+      {
+        "name": "add-to-cart"
+      },
+      {
+        "name": "cart-details"
+      }
+    ]
+  }
