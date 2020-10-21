@@ -21,7 +21,7 @@ const addItems = async (req, res) => {
 const getAvailableItems = async (req, res) => {
     try {
         const limit = req.query.limit ? parseInt(req.query.limit) : 100,
-            page = req.query.page ? parseInt(req.limit.page) : 0
+            page = req.query.page ? parseInt(req.query.page) : 0
 
         res.status(200).send({
             error: false,
