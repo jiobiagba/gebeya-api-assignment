@@ -15,3 +15,6 @@ Before usage,
 3. Run `cd gebeya-api-assignment`
 4. Build an image from the docker file. E.g. `docker build -t gebeya .`
 5. Run a container, specifying the 2 environment variables needed, and exposing port 5000 externally. E.g. `docker run -e LIVECASE=$LIVECASE -e E_SECRET=123 -p 5000:5000 gebeya`
+
+## API Documentation
+The docs for the endpoints can be accessed via https://app.swaggerhub.com/apis/jiobiagba/gebeya/1.0
